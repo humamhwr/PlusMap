@@ -1,5 +1,8 @@
 require('dotenv').config();
-
+const http = require('http');
+const express = require('express');
+const MessagingResponse = require('twilio').twiml.pop stashMessagingResponse;
+const app = express();
 const api = require("@what3words/api");
             
 api.setOptions({ key: process.env.WHAT3WORDS });
@@ -27,3 +30,30 @@ api.autosuggest("freshen.overlook.clo", {
     console.log("[code]", error.code);
     console.log("[message]", error.message);
   });
+
+
+
+
+app.post('/sms', (req, res) => {
+  const twiml = new MessagingResponse();
+  
+  twiml.message('The Robots are coming! Head for the hills!');
+  
+  res.writeHead(200, {'Content-Type': 'text/xml'});
+  res.end(twiml.toString());
+});
+
+http.createServer(app).listen(1337, () => {
+    console.log('Express server listening on port 1337');
+});
+
+
+
+
+// client.messages
+//   .create({
+//      body: 'want coffee!!',
+//      from: '+16473706627',
+//      to: '+'
+//    })
+//   .then(message => console.log(message.sid));
