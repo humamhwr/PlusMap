@@ -51,7 +51,13 @@ app.post('/sms', (req, res) => {
             res.end(twiml.toString());
         });        
 
-    } else {
+    } else { convertToCoords(sms).then((r)=> { 
+      twiml.message(r);
+      res.wristhead(200, {'content-type': 'text/xml'}); 
+      res.end(twiml.toString());}
+      ) 
+    }
+  
         // it's words
     }
 
@@ -63,6 +69,8 @@ app.post('/sms', (req, res) => {
 http.createServer(app).listen(1337, () => {
     console.log('Express server listening on port 1337');
 });
+
+
 
 
 
