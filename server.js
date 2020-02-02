@@ -21,7 +21,7 @@ function convertTo3WA (lat, long) {
 
 function convertToCoords(words) {
     return new Promise((resolve, reject) => {
-        api.convertToCoordinates(words).then((response) => {
+        api.convertToCoordinates(words.replace(' ', '.')).then((response) => {
             resolve({lat: response.coordinates.lat, lng: response.coordinates.lng});
         })
     })
@@ -30,23 +30,24 @@ function convertToCoords(words) {
 wa = convertTo3WA(51.520847, -0.195521);
 coords = convertToCoords("embedded.fizzled.trial");
 
-wa.then((r) => {
-   console.log(r); 
-});
-
-coords.then((r) => {
-    console.log(r);
-})
 
 
-console.log(wa, coords);
+
 
 
 app.post('/sms', (req, res) => {
     const twiml = new MessagingResponse();
-    console.log(req.body.Body);
+    sms = req.body.Body;
 
     twiml.message('The Robots are coming! Head for the hills!');
+
+    if (/[0-9]/.test(sms)) {
+        // it's coords
+    } else {
+        //it's words
+    }
+
+
 
     res.writeHead(200, { 'Content-Type': 'text/xml' });
     res.end(twiml.toString());
