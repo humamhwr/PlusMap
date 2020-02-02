@@ -39,18 +39,25 @@ app.post('/sms', (req, res) => {
     const twiml = new MessagingResponse();
     sms = req.body.Body;
 
-    twiml.message('The Robots are coming! Head for the hills!');
 
     if (/[0-9]/.test(sms)) {
         // it's coords
+        longlat = sms.split('=')[1];
+        longLatArray = longlat.split("%2C");
+
+        convertTo3WA(longLatArray[0], longLatArray[1]).then((r) => {
+            twiml.message(r);
+            res.writeHead(200, { 'Content-Type': 'text/xml' });
+            res.end(twiml.toString());
+        });        
+
     } else {
-        //it's words
+        // it's words
     }
 
 
 
-    res.writeHead(200, { 'Content-Type': 'text/xml' });
-    res.end(twiml.toString());
+    
 });
 
 http.createServer(app).listen(1337, () => {
